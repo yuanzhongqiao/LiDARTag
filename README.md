@@ -1,350 +1,445 @@
-# LiDARTag
+<div class="Box-sc-g0xbh4-0 bJMeLZ js-snippet-clipboard-copy-unpositioned" data-hpc="true"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h1 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDAR标签</font></font></h1><a id="user-content-lidartag" class="anchor" aria-label="永久链接：LiDARTag" href="#lidartag"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">概述</font></font></h2><a id="user-content-overview" class="anchor" aria-label="固定链接：概述" href="#overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">这是 LiDARTag 的一个包，在论文中进行了描述：</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag：用于点云的实时基准标签系统</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font><a href="/UMich-BipedLab/LiDARTag/blob/release/LiDARTag.pdf"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PDF</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> ) ( </font></font><a href="https://arxiv.org/abs/1908.10349" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">arXiv</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> )。这项工作已被 IEEE 机器人与自动化快报接受并发表于 (</font></font><a href="https://ieeexplore.ieee.org/abstract/document/9392337" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此处</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">)。</font></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基于图像的基准标记可用于解决诸如在杂乱或无纹理环境中的物体跟踪、相机（和多传感器）校准任务以及基于视觉的同步定位和地图构建 (SLAM) 等问题。然而，最先进的基准标记检测算法依赖于环境光的一致性。据我们所知，目前还没有针对点云的基准标记。</font></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">本文介绍了一种适用于 LiDAR 点云的新型基准标签设计和检测算法 LiDARTag。所提出的方法可以实时运行，并且能够以 100 Hz 的速度处理数据，这比目前可用的 LiDAR 传感器频率更快。此外，该软件可以在杂乱的室内和宽敞的室外处理不同大小的标记，即使在完全黑暗的情况下也可以使用。由于 LiDAR 传感器的特性，快速变化的环境光不会影响 LiDARTag 的检测。因此，LiDARTag 可以与基于摄像头的标记一起使用，以解决图像对环境光敏感的问题。</font></font></p>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">作者：Jiunn-Kai (Bruce) Huang、Shoutian Wang、Maani Ghaffari 和 Jessy W. Grizzle</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">维护者：</font></font><a href="https://www.brucerobot.com/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bruce JK Huang</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，brucejkh[at]gmail.com</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">隶属关系：</font><font style="vertical-align: inherit;">密歇根大学</font></font><a href="https://www.biped.solutions/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">双足动物实验室</font></font></a><font style="vertical-align: inherit;"></font></li>
+</ul>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此软件包已在 [ROS] Melodic 和 Ubuntu 18.04 下测试。</font></font><br>
+<strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">[注意]</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">更详细的介绍将很快更新。抱歉给您带来不便！</font></font><br>
+<strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">[问题]</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">如果您遇到</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">任何</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">问题，我很乐意为您提供帮助。如果您在现有问题中找不到相关问题，请打开一个新问题。我会尽力帮助您！</font></font></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">抽象的</font></font></h2><a id="user-content-abstract" class="anchor" aria-label="固定链接：摘要" href="#abstract"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基于图像的基准标记可用于解决诸如在杂乱或无纹理环境中的物体跟踪、相机（和多传感器）校准任务以及基于视觉的同时定位和地图构建 (SLAM) 等问题。最先进的基准标记检测算法依赖于环境光的一致性。本文介绍了 LiDARTag，这是一种适用于光检测和测距 (LiDAR) 点云的新型基准标签设计和检测算法。所提出的方法实时运行，可以以 100 Hz 的速度处理数据，这比当前可用的 LiDAR 传感器频率更快。由于 LiDAR 传感器的特性，快速变化的环境光不会影响 LiDARTag 的检测；因此，所提出的基准标记可以在完全黑暗的环境中工作。此外，LiDARTag 很好地补充并兼容现有的视觉基准标记，例如 AprilTags，从而实现高效的多传感器融合和校准任务。我们进一步提出了一种概念，即最小化点云和标记模板之间的拟合误差以估计标记的姿势。所提出的方法在平移中实现了毫米级的误差，在旋转中实现了几度的误差。由于 LiDAR 返回的稀疏性，点云被提升为再生核希尔伯特空间中的连续函数，其中内积可用于确定标记的 ID。实验结果经运动捕捉系统验证，证实所提出的方法可以可靠地提供标签的姿势和唯一 ID 代码。在</font></font><a href="https://google-cartographer-ros.readthedocs.io/en/latest/data.html" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google Cartographer</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和户外</font></font><a href="https://usa.honda-ri.com/H3D" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Honda H3D</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集上验证了对误报的拒绝。所有实现均用 C++ 编码，可在以下位置获得：</font></font><a href="https://github.com/UMich-BipedLab/LiDARTag"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">https://github.com/UMich-BipedLab/LiDARTag</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">视频</font></font></h2><a id="user-content-video" class="anchor" aria-label="永久链接：视频" href="#video"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请查看介绍</font></font><a href="https://www.brucerobot.com/lidartag" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">视频</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。它重点介绍了论文中的一些重要要点！
+</font></font><a href="https://www.brucerobot.com/lidartag" rel="nofollow"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/LiDARTagVideoImg.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">快速浏览</font></font></h2><a id="user-content-quick-view" class="anchor" aria-label="固定链接：快速查看" href="#quick-view"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基于 LiDAR 的标记可与基于摄像头的标记配合使用，以解决图像对环境光敏感的问题。LiDARTags 已成功应用于 LiDAR 摄像头外部校准（</font></font><a href="https://ieeexplore.ieee.org/document/9145571" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">论文</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><a href="https://github.com/UMich-BipedLab/extrinsic_lidar_camera_calibration"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GitHub</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）。该图显示了全点云扫描中两种不同尺寸的 LiDARTags 的可视化。</font></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该系统实时运行（超过 100 Hz），同时处理点云的全扫描；其平移精度达到毫米，旋转误差只有几度。标签解码准确率为 99.7%。</font></font></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/first_fig1.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/first_fig1.png" width="640" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/first_fig2.jpg"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/first_fig2.jpg" width="640" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为何选择 LiDAR？</font></font></h2><a id="user-content-why-lidar" class="anchor" aria-label="永久链接：为什么是 LiDAR？" href="#why-lidar"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">耐光照！下图显示了在几种具有挑战性的光照条件下检测到的 LiDARTags：</font></font></p>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">肮脏的环境</font></font></h5><a id="user-content-dingy-environment" class="anchor" aria-label="永久链接：肮脏的环境" href="#dingy-environment"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><animated-image data-catalyst="" style="width: 640px;"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/Dingy.gif" data-target="animated-image.originalLink"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/Dingy.gif" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage"></a>
+      <span class="AnimatedImagePlayer" data-target="animated-image.player" hidden="">
+        <a data-target="animated-image.replacedLink" class="AnimatedImagePlayer-images" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/Dingy.gif" target="_blank">
+          
+        <span data-target="animated-image.imageContainer">
+            <img data-target="animated-image.replacedImage" alt="Dingy.gif" class="AnimatedImagePlayer-animatedImage" src="https://github.com/UMich-BipedLab/LiDARTag/raw/release/figure/Dingy.gif" style="display: block; opacity: 1;">
+          <canvas class="AnimatedImagePlayer-stillImage" aria-hidden="true" width="640" height="400"></canvas></span></a>
+        <button data-target="animated-image.imageButton" class="AnimatedImagePlayer-images" tabindex="-1" aria-label="Play Dingy.gif" hidden=""></button>
+        <span class="AnimatedImagePlayer-controls" data-target="animated-image.controls" hidden="">
+          <button data-target="animated-image.playButton" class="AnimatedImagePlayer-button" aria-label="Play Dingy.gif">
+            <svg aria-hidden="true" focusable="false" class="octicon icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13.5427V2.45734C4 1.82607 4.69692 1.4435 5.2295 1.78241L13.9394 7.32507C14.4334 7.63943 14.4334 8.36057 13.9394 8.67493L5.2295 14.2176C4.69692 14.5565 4 14.1739 4 13.5427Z">
+            </path></svg>
+            <svg aria-hidden="true" focusable="false" class="octicon icon-pause" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="2" width="3" height="12" rx="1"></rect>
+              <rect x="9" y="2" width="3" height="12" rx="1"></rect>
+            </svg>
+          </button>
+          <a data-target="animated-image.openButton" aria-label="Open Dingy.gif in new window" class="AnimatedImagePlayer-button" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/Dingy.gif" target="_blank">
+            <svg aria-hidden="true" class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+              <path fill-rule="evenodd" d="M10.604 1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.75.75 0 01-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1zM3.75 2A1.75 1.75 0 002 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 12.25v-3.5a.75.75 0 00-1.5 0v3.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-8.5a.25.25 0 01.25-.25h3.5a.75.75 0 000-1.5h-3.5z"></path>
+            </svg>
+          </a>
+        </span>
+      </span></animated-image></p> 
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">完全黑暗的环境</font></font></h5><a id="user-content-completely-dark-environment" class="anchor" aria-label="永久链接：完全黑暗的环境" href="#completely-dark-environment"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><animated-image data-catalyst="" style="width: 640px;"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/CompletelyDark.gif" data-target="animated-image.originalLink"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/CompletelyDark.gif" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage"></a>
+      <span class="AnimatedImagePlayer" data-target="animated-image.player" hidden="">
+        <a data-target="animated-image.replacedLink" class="AnimatedImagePlayer-images" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/CompletelyDark.gif" target="_blank">
+          
+        <span data-target="animated-image.imageContainer">
+            <img data-target="animated-image.replacedImage" alt="CompletelyDark.gif" class="AnimatedImagePlayer-animatedImage" src="https://github.com/UMich-BipedLab/LiDARTag/raw/release/figure/CompletelyDark.gif" style="display: block; opacity: 1;">
+          <canvas class="AnimatedImagePlayer-stillImage" aria-hidden="true" width="640" height="400"></canvas></span></a>
+        <button data-target="animated-image.imageButton" class="AnimatedImagePlayer-images" tabindex="-1" aria-label="Play CompletelyDark.gif" hidden=""></button>
+        <span class="AnimatedImagePlayer-controls" data-target="animated-image.controls" hidden="">
+          <button data-target="animated-image.playButton" class="AnimatedImagePlayer-button" aria-label="Play CompletelyDark.gif">
+            <svg aria-hidden="true" focusable="false" class="octicon icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13.5427V2.45734C4 1.82607 4.69692 1.4435 5.2295 1.78241L13.9394 7.32507C14.4334 7.63943 14.4334 8.36057 13.9394 8.67493L5.2295 14.2176C4.69692 14.5565 4 14.1739 4 13.5427Z">
+            </path></svg>
+            <svg aria-hidden="true" focusable="false" class="octicon icon-pause" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="2" width="3" height="12" rx="1"></rect>
+              <rect x="9" y="2" width="3" height="12" rx="1"></rect>
+            </svg>
+          </button>
+          <a data-target="animated-image.openButton" aria-label="Open CompletelyDark.gif in new window" class="AnimatedImagePlayer-button" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/CompletelyDark.gif" target="_blank">
+            <svg aria-hidden="true" class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+              <path fill-rule="evenodd" d="M10.604 1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.75.75 0 01-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1zM3.75 2A1.75 1.75 0 002 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 12.25v-3.5a.75.75 0 00-1.5 0v3.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-8.5a.25.25 0 01.25-.25h3.5a.75.75 0 000-1.5h-3.5z"></path>
+            </svg>
+          </a>
+        </span>
+      </span></animated-image></p> 
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">半标签曝光过度</font></font></h5><a id="user-content-half-tag-being-overexposed" class="anchor" aria-label="永久链接：一半标签曝光过度" href="#half-tag-being-overexposed"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><animated-image data-catalyst="" style="width: 640px;"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/HalfOverExposured.gif" data-target="animated-image.originalLink"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/HalfOverExposured.gif" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage"></a>
+      <span class="AnimatedImagePlayer" data-target="animated-image.player" hidden="">
+        <a data-target="animated-image.replacedLink" class="AnimatedImagePlayer-images" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/HalfOverExposured.gif" target="_blank">
+          
+        <span data-target="animated-image.imageContainer">
+            <img data-target="animated-image.replacedImage" alt="HalfOverExposured.gif" class="AnimatedImagePlayer-animatedImage" src="https://github.com/UMich-BipedLab/LiDARTag/raw/release/figure/HalfOverExposured.gif" style="display: block; opacity: 1;">
+          <canvas class="AnimatedImagePlayer-stillImage" aria-hidden="true" width="640" height="400"></canvas></span></a>
+        <button data-target="animated-image.imageButton" class="AnimatedImagePlayer-images" tabindex="-1" aria-label="Play HalfOverExposured.gif" hidden=""></button>
+        <span class="AnimatedImagePlayer-controls" data-target="animated-image.controls" hidden="">
+          <button data-target="animated-image.playButton" class="AnimatedImagePlayer-button" aria-label="Play HalfOverExposured.gif">
+            <svg aria-hidden="true" focusable="false" class="octicon icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13.5427V2.45734C4 1.82607 4.69692 1.4435 5.2295 1.78241L13.9394 7.32507C14.4334 7.63943 14.4334 8.36057 13.9394 8.67493L5.2295 14.2176C4.69692 14.5565 4 14.1739 4 13.5427Z">
+            </path></svg>
+            <svg aria-hidden="true" focusable="false" class="octicon icon-pause" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="2" width="3" height="12" rx="1"></rect>
+              <rect x="9" y="2" width="3" height="12" rx="1"></rect>
+            </svg>
+          </button>
+          <a data-target="animated-image.openButton" aria-label="Open HalfOverExposured.gif in new window" class="AnimatedImagePlayer-button" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/HalfOverExposured.gif" target="_blank">
+            <svg aria-hidden="true" class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+              <path fill-rule="evenodd" d="M10.604 1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.75.75 0 01-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1zM3.75 2A1.75 1.75 0 002 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 12.25v-3.5a.75.75 0 00-1.5 0v3.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-8.5a.25.25 0 01.25-.25h3.5a.75.75 0 000-1.5h-3.5z"></path>
+            </svg>
+          </a>
+        </span>
+      </span></animated-image></p> 
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">快速变化的环境光</font></font></h5><a id="user-content-rapid-changing-ambient-light" class="anchor" aria-label="永久链接：快速变化的环境光" href="#rapid-changing-ambient-light"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><animated-image data-catalyst="" style="width: 640px;"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/RapidShort.gif" data-target="animated-image.originalLink"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/RapidShort.gif" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage"></a>
+      <span class="AnimatedImagePlayer" data-target="animated-image.player" hidden="">
+        <a data-target="animated-image.replacedLink" class="AnimatedImagePlayer-images" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/RapidShort.gif" target="_blank">
+          
+        <span data-target="animated-image.imageContainer">
+            <img data-target="animated-image.replacedImage" alt="RapidShort.gif" class="AnimatedImagePlayer-animatedImage" src="https://github.com/UMich-BipedLab/LiDARTag/raw/release/figure/RapidShort.gif" style="display: block; opacity: 1;">
+          <canvas class="AnimatedImagePlayer-stillImage" aria-hidden="true" width="640" height="400"></canvas></span></a>
+        <button data-target="animated-image.imageButton" class="AnimatedImagePlayer-images" tabindex="-1" aria-label="Play RapidShort.gif" hidden=""></button>
+        <span class="AnimatedImagePlayer-controls" data-target="animated-image.controls" hidden="">
+          <button data-target="animated-image.playButton" class="AnimatedImagePlayer-button" aria-label="Play RapidShort.gif">
+            <svg aria-hidden="true" focusable="false" class="octicon icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13.5427V2.45734C4 1.82607 4.69692 1.4435 5.2295 1.78241L13.9394 7.32507C14.4334 7.63943 14.4334 8.36057 13.9394 8.67493L5.2295 14.2176C4.69692 14.5565 4 14.1739 4 13.5427Z">
+            </path></svg>
+            <svg aria-hidden="true" focusable="false" class="octicon icon-pause" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="2" width="3" height="12" rx="1"></rect>
+              <rect x="9" y="2" width="3" height="12" rx="1"></rect>
+            </svg>
+          </button>
+          <a data-target="animated-image.openButton" aria-label="Open RapidShort.gif in new window" class="AnimatedImagePlayer-button" href="https://github.com/UMich-BipedLab/LiDARTag/blob/release/figure/RapidShort.gif" target="_blank">
+            <svg aria-hidden="true" class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+              <path fill-rule="evenodd" d="M10.604 1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.75.75 0 01-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1zM3.75 2A1.75 1.75 0 002 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 12.25v-3.5a.75.75 0 00-1.5 0v3.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-8.5a.25.25 0 01.25-.25h3.5a.75.75 0 000-1.5h-3.5z"></path>
+            </svg>
+          </a>
+        </span>
+      </span></animated-image></p> 
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">总体管道</font></font></h2><a id="user-content-overall-pipeline" class="anchor" aria-label="永久链接：总体管道" href="#overall-pipeline"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该系统包含三个部分：标签检测、姿势估计和标签解码。检测步骤需要进行整个 LiDAR 扫描（32 光束 Velodyne ULTRA Puck LiDAR 最多可扫描 120,000 个点），并输出 LiDARTag 的可能有效载荷点集合。接下来，标签的最佳姿势可最小化</font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=L_1"><img src="https://render.githubusercontent.com/render/math?math=L_1" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(8) 中的 -inspired 成本，尽管标签围绕标签法线向量的旋转可能会偏离</font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=\pm 90^\circ"><img src="https://render.githubusercontent.com/render/math?math=\pm 90^\circ" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">或</font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=180^\circ"><img src="https://render.githubusercontent.com/render/math?math=180^\circ" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，并将在解码过程中解决。使用预先计算的函数库对标签的 ID 进行解码。解码后的标签消除了围绕法线的旋转歧义。</font></font></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/Pipelinev3.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/Pipelinev3.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">封装分析</font></font></h2><a id="user-content-package-analysis" class="anchor" aria-label="永久链接：软件包分析" href="#package-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">我们展示了 LiDARTag 的性能评估，其中地面真实数据由具有 30 个运动捕捉摄像头的运动捕捉系统提供。我们还在宽敞的室外和杂乱的室内环境中广泛分析了系统中的每个步骤。此外，我们还报告了在室内</font></font><a href="https://google-cartographer-ros.readthedocs.io/en/latest/data.html" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google Cartographer</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和室外</font></font><a href="https://usa.honda-ri.com/H3D" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Honda H3D</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集上验证的误报率。</font></font></p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">姿势和解码分析</font></font></h4><a id="user-content-pose-and-decoding-analysis" class="anchor" aria-label="永久链接：姿势和解码分析" href="#pose-and-decoding-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">RKHS 方法的解码精度和拟合方法的姿势精度。基本事实由具有 30 个运动捕捉摄像机的运动捕捉系统提供。距离以米为单位。平移误差以毫米为单位，旋转误差是错位角度 (23)，以度为单位。
+</font></font><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/Pose.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/Pose.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">每一步分析的计算时间</font></font></h4><a id="user-content-computation-time-of-each-step-analysis" class="anchor" aria-label="永久链接：每步分析的计算时间" href="#computation-time-of-each-step-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该表计算了我们收集的所有数据集的平均值，并描述了室内和室外每个步骤的计算时间。</font></font></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/PipelineSpeedAnalysis.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/PipelineSpeedAnalysis.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">聚类拒绝分析</font></font></h3><a id="user-content-cluster-rejection-analysis" class="anchor" aria-label="永久链接：集群拒绝分析" href="#cluster-rejection-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该表考虑了我们收集的所有数据，并显示了不同场景中每一步被拒绝的簇数。此外，我们还报告了</font></font><a href="https://google-cartographer-ros.readthedocs.io/en/latest/data.html" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google Cartographer</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和</font></font><a href="https://usa.honda-ri.com/H3D" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Honda H3D</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集的误报拒绝情况。
+</font></font><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/ClusterRemoval.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/ClusterRemoval.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">双重和分析</font></font></h4><a id="user-content-double-sum-analysis" class="anchor" aria-label="永久链接：双重和分析" href="#double-sum-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(18) 中的原始双精度和太慢，无法实现实时应用。下表比较了计算双精度和的不同方法，其中 TBB 代表英特尔的线程构建块库。此外，我们还应用了 kd 树数据结构来加快查询过程；然而，kd 树无法产生足够快的结果。表中的单位是毫秒。
+</font></font><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/DoubleSum.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/DoubleSum.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">误报分析</font></font></h4><a id="user-content-false-positives-analysis" class="anchor" aria-label="永久链接：误报分析" href="#false-positives-analysis"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该表显示了所提算法的误报拒绝次数。我们在室内</font></font><a href="https://google-cartographer-ros.readthedocs.io/en/latest/data.html" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google Cartographer</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和室外</font></font><a href="https://usa.honda-ri.com/H3D" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Honda H3D</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集上验证了拒绝率。前者有两个 VLP-16 Velodyne LiDAR，后者有一个 64 光束 Velodyne LiDAR。
+</font></font><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/FalsePositives.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/FalsePositives.png" width="960" style="max-width: 100%;"></a></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">所需的库/包</font></font></h2><a id="user-content-required-libraries--packages" class="anchor" aria-label="永久链接：所需的库/包" href="#required-libraries--packages"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">这些是 LiDARTag 包中使用的包。看起来很多，但如果你按照我的步骤操作，安装它们应该不会超过 30 分钟（包括构建时间！）。我花了一段时间才把一切都做好。我</font></font><a href="#installation-of-related-libraries"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在这里</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">总结了我如何安装它们。但是，你可以选择任何你想要的方式安装它们。</font></font></p>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请安装</font></font><a href="http://wiki.ros.org/melodic/Installation/Ubuntu" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ROS Melodic</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请安装</font></font><a href="https://github.com/oneapi-src/oneTBB"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">TBB 库</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。您可能需要根据您的安装修改 CMakeLists.txt。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请安装</font></font><a href="https://nlopt.readthedocs.io/en/latest/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">NLopt</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。您可能需要根据您的安装情况对 CMakeLists.txt 进行 midify。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请下载</font></font><a href="https://github.com/UMich-BipedLab/LiDARTag_msgs"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag_msgs</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">并将其放在您的 catkin 工作区下。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">通过使用内部 Eigen 库而不是系统级 Eigen 库，Eigen 版本问题已得到修复。</font></font></li>
+</ol>
 
-## Overview
-This is a package for LiDARTag, described in paper: **LiDARTag: A Real-Time Fiducial Tag System for Point Clouds** ([PDF](./LiDARTag.pdf))([arXiv](https://arxiv.org/abs/1908.10349)). This work is accepted by IEEE Robotics and Automation Letters and published at ([here](https://ieeexplore.ieee.org/abstract/document/9392337)).
-
-
-Image-based fiducial markers are useful in problems such as object tracking in cluttered or textureless environments, camera (and multi-sensor) calibration tasks, and vision-based simultaneous localization and mapping (SLAM). However, the state-of-the-art fiducial marker detection algorithms rely on the consistency of the ambient lighting. To the best of our knowledge, there are no existing fiducial markers for point clouds.
-
-This paper introduces LiDARTag, a novel fiducial tag design and detection algorithm suitable for LiDAR point clouds. The proposed method runs in real-time and can process data at 100 Hz, which is faster than the currently available LiDAR sensor frequencies. Additionally, the software works with different marker sizes in cluttered indoors and spacious outdoors, even when it is entirely dark. Because of the LiDAR sensors' nature, rapidly changing ambient lighting will not affect the detection of a LiDARTag. Therefore, LiDARTag can be used in tandem with camera-based markers to address the issue of images being sensitive to ambient lighting.
-
-* Author: Jiunn-Kai (Bruce) Huang, Shoutian Wang, Maani Ghaffari, and Jessy W. Grizzle
-* Maintainer: [Bruce JK Huang](https://www.brucerobot.com/), brucejkh[at]gmail.com
-* Affiliation: [The Biped Lab](https://www.biped.solutions/), the University of Michigan
-
-This package has been tested under [ROS] Melodic and Ubuntu 18.04.\
-**[Note]** More detailed introduction will be updated shortly. Sorry for the inconvenient!\
-**[Issues]** If you encounter _any_ issues, I would be happy to help. If you cannot find a related one in the existing issues, please open a new one. I will try my best to help!
-
-
-## Abstract
-Image-based fiducial markers are useful in problems such as object tracking in cluttered or textureless environments, camera (and multi-sensor) calibration tasks, and vision-based simultaneous localization and mapping (SLAM). The state-of-the-art fiducial marker detection algorithms rely on the consistency of the ambient lighting. This paper introduces LiDARTag, a novel fiducial tag design and detection algorithm suitable for light detection and ranging (LiDAR) point clouds. The proposed method runs in real-time and can process data at 100 Hz, which is faster than the currently available LiDAR sensor frequencies. Because of the LiDAR sensors' nature, rapidly changing ambient lighting will not affect the detection of a LiDARTag; hence, the proposed fiducial marker can operate in a completely dark environment. In addition, the LiDARTag nicely complements and is compatible with existing visual fiducial markers, such as AprilTags, allowing for efficient multi-sensor fusion and calibration tasks. We further propose a concept of minimizing a fitting error between a point cloud and the marker's template to estimate the marker's pose. The proposed method achieves millimeter error in translation and a few degrees in rotation.  Due to LiDAR returns' sparsity, the point cloud is lifted to a continuous function in a reproducing kernel Hilbert space where the inner product can be used to determine a marker's ID. The experimental results, verified by a motion capture system, confirm that the proposed method can reliably provide a tag's pose and unique ID code. The rejection of false positives is validated on the [Google Cartographer](https://google-cartographer-ros.readthedocs.io/en/latest/data.html) dataset and the outdoor [Honda H3D](https://usa.honda-ri.com/H3D) datasets. All implementations are coded in C++ and are available at: [https://github.com/UMich-BipedLab/LiDARTag](https://github.com/UMich-BipedLab/LiDARTag).
-
-
-## Video
-Please checkout the introduction [video](https://www.brucerobot.com/lidartag). It highlights some important keypoints in the paper!
-[<img src="./figure/LiDARTagVideoImg.png" width="960">](https://www.brucerobot.com/lidartag)
-
-
-
-## Quick View
-LiDAR-based markers can be used in tandem with camera-based markers to address the issue of images being sensitive to ambient lighting. LiDARTags have been successfully applied to LiDAR-camera extrinsic calibration ([paper](https://ieeexplore.ieee.org/document/9145571), [GitHub](https://github.com/UMich-BipedLab/extrinsic_lidar_camera_calibration)). This figure shows a visualization of LiDARTags of two different sizes in a full point cloud scan.
-
-This system runs in real-time (over 100 Hz) while  handling a full scan of the point cloud; it achieves millimeter accuracy  in translation and a few degrees of error in rotation. The tag decoding accuracy is 99.7%.
-
-<img src="./figure/first_fig1.png" width="640">
-<img src="./figure/first_fig2.jpg" width="640">
-
-## Why LiDAR?
-Robust to lighting!! The following shows LiDARTags are detected in several challenging lighting conditions:
-##### Dingy environment
-<img src="./figure/Dingy.gif" width="640"> 
-
-##### Completely dark environment
-<img src="./figure/CompletelyDark.gif" width="640"> 
-
-##### Half tag being overexposed
-<img src="./figure/HalfOverExposured.gif" width="640"> 
-
-##### Rapid changing ambient light
-<img src="./figure/RapidShort.gif" width="640"> 
-
-## Overall pipeline
-The system contains three parts: tag detection, pose estimation, and tag decoding. The detection step takes an entire LiDAR scan (up to 120,000 points from a 32-Beam Velodyne ULTRA Puck LiDAR) and outputs collections of likely payload points of the LiDARTag. Next, a tag's optimal pose minimizes the <img src="https://render.githubusercontent.com/render/math?math=L_1">-inspired cost in (8), though the rotation of the tag about a normal vector to the tag may be off by <img src="https://render.githubusercontent.com/render/math?math=\pm 90^\circ"> or <img src="https://render.githubusercontent.com/render/math?math=180^\circ"> and will be resolved in the decoding process. The tag's ID is decoded with a pre-computed function library. The decoded tag removes the rotation ambiguity about the normal.
-
-<img src="./figure/Pipelinev3.png" width="960">
-
-
-## Package Analysis
-We present performance evaluations of the LiDARTag where ground truth data are provided by a motion capture system with 30 motion capture cameras. We also extensively analyze each step in the system with spacious outdoor and cluttered indoor environments. Additionally, we report the rate of false positives validated on the indoor [Google Cartographer](https://google-cartographer-ros.readthedocs.io/en/latest/data.html) dataset and the outdoor [Honda H3D](https://usa.honda-ri.com/H3D) datasets.
-
-#### Pose and Decoding Analysis
-Decoding accuracy of the RKHS method and pose accuracy of the fitting method. The ground truth is provided by a motion capture system with 30 motion capture cameras. The distance is in meters. The translation error is in millimeters and rotation error is the misalignment angle, (23), in degrees.
-<img src="./figure/Pose.png" width="960">
-
-#### Computation Time of Each Step Analysis
-This table averages all the datasets we collected and describes computation time of each step for indoors and outdoors.
-
-<img src="./figure/PipelineSpeedAnalysis.png" width="960">
-
-### Cluster Rejection Analysis
-This table takes into account all the data we collected and shows numbers of rejected clusters in each step in different scenes. Additionally, we also report false positive rejection for [Google Cartographer](https://google-cartographer-ros.readthedocs.io/en/latest/data.html) dataset and [Honda H3D](https://usa.honda-ri.com/H3D) datasets.
-<img src="./figure/ClusterRemoval.png" width="960">
-
-#### Double-Sum Analysis
-The original double sum in (18) is too slow to achieve a real-time application. This table compares different methods to compute the double sum, in which the TBB stands for Threading Building Blocks library from Intel. Additionally, we also apply a k-d tree data structure to speed up the querying process; the k-d tree, however, does not produce fast enough results. The unit in the table is milliseconds.
-<img src="./figure/DoubleSum.png" width="960">
-
-#### False Positives Analysis
-This table shows the numbers of false positive rejection of the proposed algorithm. We validated the rejection rate on the indoor [Google Cartographer](https://google-cartographer-ros.readthedocs.io/en/latest/data.html) dataset and the outdoor [Honda H3D](https://usa.honda-ri.com/H3D) datasets. The former has two VLP-16 Velodyne LiDAR and the latter has one 64-beam Velodyne LiDAR.
-<img src="./figure/FalsePositives.png" width="960">
-
-## Required Libraries / Packages
-Those are the packages used in the LiDARTag package. It seems many but if you follow my steps, it should take you no more than 30 mins to instal them (including building time!). It took me awhile to get everything right. I summarize how I installed them [here](#installation-of-related-libraries). However, you may choose any way you want to install them.
-1. Please install [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu).
-2. Please install [TBB library](https://github.com/oneapi-src/oneTBB). You may need to modify the CMakeLists.txt according to your installation.
-3. Please install [NLopt](https://nlopt.readthedocs.io/en/latest/). You may need to midify the CMakeLists.txt according to your installation.
-4. Please download [LiDARTag_msgs](https://github.com/UMich-BipedLab/LiDARTag_msgs) and place them under your catkin workspace.
-5. The issue of Eigen version has been fixed by using an internal Eigen library instead of the system-wise Eigen library.
-<!--
-5. Plesae ensure you have a correct Eigen Library on your system by downloading it from the [GitLab](https://gitlab.com/libeigen/eigen.git) and checkout `6f0f6f792e441c32727ed945686fefe02e6bdbc6`. Any commit older than this should also work.
--->
-
-## Installation of Related Libraries
-### ROS Melodic
-Please directly follow the instruction on the official website ([here](http://wiki.ros.org/melodic/Installation/Ubuntu)).
-
-### TBB library
-###### Installation
-Original TBB package from Intel does not support CMake; I, therefore, use another repository that supports CMake to make my life easier.
-```
-git clone https://github.com/wjakob/tbb
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关库的安装</font></font></h2><a id="user-content-installation-of-related-libraries" class="anchor" aria-label="永久链接：安装相关库" href="#installation-of-related-libraries"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ROS旋律</font></font></h3><a id="user-content-ros-melodic" class="anchor" aria-label="永久链接：ROS Melodic" href="#ros-melodic"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"></font><a href="http://wiki.ros.org/melodic/Installation/Ubuntu" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请直接按照官方网站（此处</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）</font><font style="vertical-align: inherit;">上的说明进行操作。</font></font></p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">TBB 库</font></font></h3><a id="user-content-tbb-library" class="anchor" aria-label="永久链接: TBB 库" href="#tbb-library"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">安装</font></font></h6><a id="user-content-installation" class="anchor" aria-label="固定链接：安装" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">英特尔的原始 TBB 包不支持 CMake；因此，我使用另一个支持 CMake 的存储库来使我的生活更轻松。</font></font></p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>git clone https://github.com/wjakob/tbb
 mkdir build;
 cd build;
 cmake ..;
 cmake --build . --config Release -- -j 6;
 sudo cmake --build . --target install
-```
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="git clone https://github.com/wjakob/tbb
+mkdir build;
+cd build;
+cmake ..;
+cmake --build . --config Release -- -j 6;
+sudo cmake --build . --target install" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
 
-<!--
-###### Notes
-Ensure the followings in the CMakeList.txt are correct:
-1. FindTBB.cmake is under _LiDARTag/cmake/_
-2. LIST(APPEND CMAKE_MODULE_PATH "YOUR_PATH/LiDARTag/cmake/")
-	* Please change **YOUR_PATH** to your path to the LiDARTag package (something like this: catkin/src/LiDARTag/cmake).
--->
-
-
-### NLopt library
-###### Installation
-Please direct follow the instruction on the official website ([here](https://nlopt.readthedocs.io/en/latest/NLopt_Installation/)) or as follow:
-```
-git clone git://github.com/stevengj/nlopt
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">NLopt 库</font></font></h3><a id="user-content-nlopt-library" class="anchor" aria-label="永久链接：NLopt 库" href="#nlopt-library"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">安装</font></font></h6><a id="user-content-installation-1" class="anchor" aria-label="固定链接：安装" href="#installation-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"></font><a href="https://nlopt.readthedocs.io/en/latest/NLopt_Installation/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请直接按照官方网站（此处</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）上的说明</font><font style="vertical-align: inherit;">或如下步骤进行操作：</font></font></p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>git clone git://github.com/stevengj/nlopt
 cd nlopt
 mkdir build
 cd build
 cmake ..
 make
 sudo make install
-```
-
-### LiDARTag package
-1. Once you place LiDARTag_msgs under your catkin workspace and installed all the required libraries, you can directly `catkin_make` the package.
-2. `source devel/setup.bash`
-3. `roslaunch lidartag LiDARTag_twotags.launch`
-4. `rosbag play -l -q bagfile.bag`
-
-
-
-## Datasets and Results
-### Quantitative results:
-If you would like to see how the tables in the paper are generated, please follow as below:
-1. Download [this folder](https://drive.google.com/drive/folders/16bJx_Hc7iqy5-rxjWVgXOhvJGULu4hI9?usp=sharing).
-2. Put them under _LiDARTag/matlab/paper_data/_
-3. Run _genTable.m_ located at _LiDARTag/matlab/_
-
-
-To regenerate results on the paper from scratch, please download the two datasets below:
-1. Please download bagfiles from [here](https://drive.google.com/drive/folders/1k-p3q2hl1ZRIcle1lfcS0AN-DAK91RMw?usp=sharing).
-2. Please download motion capture data from [here](https://drive.google.com/drive/folders/1rWCRsktFPZiOyQopwG7vCXatqwU-EyFb?usp=sharing)
-3. change the _output_path_ in the launch file
-4. `roslaunch lidartag LiDARTag_threetags.launch`
-
-###### Note
-The target sizes in the quantitative result folder are 1.22.
-
-### Qualitative results:
-1. Please download bagfiles from [here](https://drive.google.com/drive/folders/19w13uJNMax9_fNIzmFZwzYq2LpJsjKKh?usp=sharing).
-2. `roslaunch lidartag LiDARTag_twotags.launch`
-
-###### Note
-The target sizes in the qualitative result folder are 0.8051, 0.61.
-
-
-### False positive rejection:
-Please download [Google Cartographer](https://google-cartographer-ros.readthedocs.io/en/latest/data.html) dataset and [Honda H3D](https://usa.honda-ri.com/H3D) datasets.
-We also provide different launch files (cartographer.launch, H3D.launch) for different datasets due to different published LiDAR topics and different _output_path_. I also wrote my own parsing script to pass bin files to rosbag. Please let me know if anyone needs it.
-
-
-## Running
-1. Please download qualitative bagfiles from [here](https://drive.google.com/drive/folders/19w13uJNMax9_fNIzmFZwzYq2LpJsjKKh?usp=sharing).
-2. `catkin_make` the package.
-3. `source devel/setup.bash`
-4. `roslaunch lidartag LiDARTag_twotags.launch`
-5. `rosbag play -l -q bagfile.bag`
-6. To see the results, `rosrun rviz rviz`. You can directly open _LiDARTag.rviz_ under _LiDARTag/rviz/_ folder.
-
-
-###### Notes
-This package provides several launch files that you can directly run the package.\
-Please remember to change the **tag_size_list** in a launch file according to your target sizes or which bag file you are playing, or what marker sizes you have.\
-Different launch files:\
--- LiDARTag_smallest.launch: only the smallest tag (0.61)\
--- LiDARTag_twotags.launch: two smaller tags (0.61, 0.8)\
--- LiDARTag_threetags.launch: all tags (0.8, 0.61, 1.22)\
-Please note that, the clearance around the markers should larger than <img src="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4">, where <img src="https://render.githubusercontent.com/render/math?math=t"> is the size of the **largest** marker. Therefore, it is recommended to use smaller tags in indoor environments.
-
-
-
-## Building Your Markers
-<img src="./figure/LiDARTagSideView.png" height="280"> <img src="./figure/LiDARTagFrontView.png" height="280"> <img src="./figure/MarkerExample2.png" height="280">\
-We provide tag16h6c5 from AprilTag3 with three sizes (0.61, 0.85, 1.2).\
-If you want to use the provided markers, it is easy:
-1. Attach a fiducial marker to a squared cardboard or plexiglass and place the marker inside the yellow region. 
- 	* Note: The sizes **must be** one of 0.61, 0.805, 1.22 meter, or you **have to** regenerate the function dictionary. If so, please follow [here](#building-your-own-customized-markers).
-2. Find a 3D object to _support_ your marker. It could be a box or an easel.
-	* Please note that, the clearance around the markers should larger than <img src="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4">, where <img src="https://render.githubusercontent.com/render/math?math=t"> is the size of the **largest** marker. Therefore, it is recommended to use smaller tags in indoor environments.
-4. Follow [these steps](#running) to run the package.
-
-## Building Your Own Customized Markers
-If you would like to use your own customized markers (i.e. different types of markers or different sizes), please follow these steps:\
-I. Build your function dictionary:
-1. `git clone https://github.com/UMich-BipedLab/matlab_utils`
-2. Add _matlab_utils_ into _build_LiDARTag_library.m_ or add _matlab_utils_ into your MATLAB path.
-3. Edit **opts.img_path** in _build_LiDARTag_library.m_ according to where you put images of your fiducial markers.
-4. Measure the size of your marker (<img src="https://render.githubusercontent.com/render/math?math=t">)
-5. Open _build_LiDARTag_library.m_ in _LiDARTag/matlab/function_dictionary/_. Change `opts.target_size_` to your marker size and run _build_LiDARTag_library.m_ to generate your function library.
-6. Put the generated function dictuionary into _LiDARTag/lib/_
-7. When placing the generated function dictionary in _LiDARTag/lib/_, please put different sizes into different sub-folders (0, 1, 2, 3, ...) and put them in ascending order. For example, if you have three sizes (0.6, 0.8, 1.2), then you will have three sub-folders (0, 1, 2) inside the _lib/_ folder. Please place them as follow:
-    - LiDARTag/lib/0/: put 0.6-size here
-    - LiDARTag/lib/1/: put 0.8-size here
-    - LiDARTag/lib/2/: put 1.2-size here
-
-II. Follow [Building Your Markers](#building-your-markers)
-###### Note
-All the functions that are used for testing RKHS are all released in _LiDARTag/matlab/function_dictionary/_
-
-
-## Parameters of launch files
-We split the parameters to two different launch files: `LiDARTag_outdoor.launch` and
-`LiDARTag_master.launch.` The front contains the most common tunables for different
-environments such as indoor or outdoor. The latter includes more parameters that you
-usually need to change for your system only once and just leave them there.
-### LiDARTag_outdoor.launch 
-##### feature clustering
-* nearby_factor  
-    Value used to determine if two points are near to each other
-* linkage_tunable  
-    Value used to compute the linkage criteria
-
-##### cluster validation
-* max_outlier_ratio  
-    Value used to validate clusters during checking outliers in plane fitting
-* tag_size_list  
-    List of possible sizes of tag
-
-### LiDARTag_master.launch 
-#### System Mode
-* mark_cluster_validity  
-    whether to validate clusters according to different conditions
-* plane_fitting  
-    whether to validate clusters according to the result of plane_fitting
-* optimize_pose  
-    Whether to optimize poses via reducing the cost function
-* decode_id  
-    Whether to decode IDs
-* collect_data  
-    Whether to publish detected PCs
-* num_threads  
-    The number of threads used for TBB
-* print_info  
-    Whether to log status in ros_info_stream
-
-#### Debugging Mode
-* debug_info  
-    Whether to log debug information in ros_debug_stream
-* debug_time  
-    Whether to compute time for different parts
-* debug_decoding_time  
-    Whether to log time for decoding IDs
-* log_data  
-    Whether to save status information into txt file
-
-#### LiDAR Specification
-* has_ring  
-    Whether input data has ring information for each point
-* estimate_ring  
-    Whether to estimate ring number for each point
-
-#### Solvers for Pose Optimization
-* optimization_solver (default: 8)    
-    Which optimization solver to use for optimizing the cost function of a pose.  
-    * Below is numerical gradient-based methods  
-    1: opt_method = nlopt::LN_PRAXIS;  
-    2: opt_method = nlopt::LN_NEWUOA_BOUND;  
-    3: opt_method = nlopt::LN_SBPLX; // recommended  
-    4: opt_method = nlopt::LN_BOBYQA;  
-    5: opt_method = nlopt::LN_NELDERMEAD;  
-    6: opt_method = nlopt::LN_COBYLA;  
-    * Below is analytical gradient-based methods  
-    7: opt_method = nlopt::LD_SLSQP; // recommended   200Hz  
-    8: opt_method = nlopt::LD_MMA;   // recommended   120Hz  
-    9: opt_method = nlopt::LD_TNEWTON_PRECOND_RESTART;   // fail 90%  
-    10: opt_method = nlopt::LD_TNEWTON_PRECOND; // fail 90%  
-    11: opt_method = nlopt::LD_TNEWTON_RESTART; // fail 80%  
-    12: opt_method = nlopt::LD_TNEWTON; // fail 90%  
-    13: opt_method = nlopt::LD_LBFGS; // fail 90%  
-    14: opt_method = nlopt::LD_VAR1; // fail 90%  
-    15: opt_method = nlopt::LD_VAR2; // fail 90%  
-
-* euler_derivative  
-    Whether to use euler derivative or lie group derivative in optimization  
-* optimize_up_bound  
-    Value used for constraints in optimization  
-* optimize_low_bound  
-    Value used for constraints in optimization
-
-#### Decode Method
-* decode_method (default: 2)  
-   Which decoding method to use:  
-   0: naive decoder  
-   1: Weighted Gaussian  
-   2: RKHS  
-* decode_mode (default: 5)  
-    Which mode to use:
-	0: single thread: original double sum  
-	1: single thread: convert to matrices  
-	2: single thread: convert matrices to vectors  
-	3: c++ thread (works for each point for a thread but not for blobs of points for a thread)  
-	4: Multi-threading: Original double sum using TBB  
-	5: Multi-threading: Vector form using TBB without scheduling  
-	6: Multi-threading: Vector form using TBB with manual scheduling  
-	7: Multi-threading: Vector form using TBB with TBB scheduling  
-	8: Single thread: using KDTree  
-
-#### Tunable
-##### feature clustering 
-* distance_bound  
-    Value used to construct a cube and only detect the tag inside this cube
-* depth_bound  
-    Value used to detect feature points compared with depth gradients
-* num_points_for_plane_feature  
-    number of points used for detection of feature points
-
-##### cluster validation
-* min_return_per_grid  
-    Minimum number of points in each grid (below this number, the cluster will be invalid)
-* optimize_percentage  
-    Value used to validate the result of pose estimation via checking cost value
-* payload_intensity_threshold  
-    Value used to detect boundary points on the cluster via intensity gradient
-* points_threshold_factor  
-* distance_to_plane_threshold  
-    Value used for plane fitting for a cluster
-* minimum_ring_boundary_points  
-    Minimum number of boundary points on each ring in the cluster
-* coa_tunable  
-    Value used to validate the result of pose estimation via checking coverage area
-* tagsize_tunable  
-    Value used to estimate the size of tag
-
-
-
-## Citations
-The detail is described in: **LiDARTag: A Real-Time Fiducial Tag for Point Clouds,** Jiunn-Kai Huang, Shoutian Wang, Maani Ghaffari, and Jessy W. Grizzle. ([PDF](./LiDARTag.pdf)) ([arXiv](https://arxiv.org/abs/1908.10349)) ([here](https://ieeexplore.ieee.org/abstract/document/9392337))
-
-```
-@ARTICLE{HuangLiDARTag2020,
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="git clone git://github.com/stevengj/nlopt
+cd nlopt
+mkdir build
+cd build
+cmake ..
+make
+sudo make install" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag 包</font></font></h3><a id="user-content-lidartag-package" class="anchor" aria-label="永久链接：LiDARTag 包" href="#lidartag-package"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一旦您将 LiDARTag_msgs 放在您的 catkin 工作区下并安装了所有必需的库，您就可以直接</font></font><code>catkin_make</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">打包。</font></font></li>
+<li><code>source devel/setup.bash</code></li>
+<li><code>roslaunch lidartag LiDARTag_twotags.launch</code></li>
+<li><code>rosbag play -l -q bagfile.bag</code></li>
+</ol>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和结果</font></font></h2><a id="user-content-datasets-and-results" class="anchor" aria-label="永久链接：数据集和结果" href="#datasets-and-results"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">定量结果：</font></font></h3><a id="user-content-quantitative-results" class="anchor" aria-label="永久链接：定量结果：" href="#quantitative-results"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">如果你想了解论文中的表格是如何生成的，请按照以下步骤操作：</font></font></p>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">下载</font></font><a href="https://drive.google.com/drive/folders/16bJx_Hc7iqy5-rxjWVgXOhvJGULu4hI9?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此文件</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">夹。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将它们放在</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/matlab/paper_data/下</font></font></em></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">运行</font><font style="vertical-align: inherit;">位于</font><em><font style="vertical-align: inherit;">LiDARTag/matlab/的</font></em></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">genTable.m</font></font></em><font style="vertical-align: inherit;"></font><em><font style="vertical-align: inherit;"></font></em></li>
+</ol>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">要从头开始重新生成论文结果，请下载以下两个数据集：</font></font></p>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请从</font></font><a href="https://drive.google.com/drive/folders/1k-p3q2hl1ZRIcle1lfcS0AN-DAK91RMw?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">这里</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">下载 bagfiles 。</font></font></li>
+<li><font style="vertical-align: inherit;"><a href="https://drive.google.com/drive/folders/1rWCRsktFPZiOyQopwG7vCXatqwU-EyFb?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;">请从此处</font></a><font style="vertical-align: inherit;">下载动作捕捉数据</font></font><a href="https://drive.google.com/drive/folders/1rWCRsktFPZiOyQopwG7vCXatqwU-EyFb?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;"></font></a></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">更改</font><font style="vertical-align: inherit;">启动文件中的</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">output_path</font></font></em><font style="vertical-align: inherit;"></font></li>
+<li><code>roslaunch lidartag LiDARTag_threetags.launch</code></li>
+</ol>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">笔记</font></font></h6><a id="user-content-note" class="anchor" aria-label="永久链接：注意" href="#note"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">定量结果文件夹中的目标尺寸为 1.22。</font></font></p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">定性结果：</font></font></h3><a id="user-content-qualitative-results" class="anchor" aria-label="永久链接：定性结果：" href="#qualitative-results"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请从</font></font><a href="https://drive.google.com/drive/folders/19w13uJNMax9_fNIzmFZwzYq2LpJsjKKh?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">这里</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">下载 bagfiles 。</font></font></li>
+<li><code>roslaunch lidartag LiDARTag_twotags.launch</code></li>
+</ol>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">笔记</font></font></h6><a id="user-content-note-1" class="anchor" aria-label="永久链接：注意" href="#note-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">定性结果文件夹中的目标尺寸为0.8051、0.61。</font></font></p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">假阳性拒绝：</font></font></h3><a id="user-content-false-positive-rejection" class="anchor" aria-label="永久链接：误报拒绝：" href="#false-positive-rejection"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请下载</font></font><a href="https://google-cartographer-ros.readthedocs.io/en/latest/data.html" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google Cartographer</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集和</font></font><a href="https://usa.honda-ri.com/H3D" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Honda H3D</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">数据集。由于发布的 LiDAR 主题不同，</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">output_path</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">也不同，我们还为不同的数据集提供了不同的启动文件（cartographer.launch、H3D.launch）。我还编写了自己的解析脚本，将 bin 文件传递&ZeroWidthSpace;&ZeroWidthSpace;给 rosbag。如果有人需要，请告诉我。</font></font></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">跑步</font></font></h2><a id="user-content-running" class="anchor" aria-label="固定链接：跑步" href="#running"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请从</font></font><a href="https://drive.google.com/drive/folders/19w13uJNMax9_fNIzmFZwzYq2LpJsjKKh?usp=sharing" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">这里</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">下载定性包文件。</font></font></li>
+<li><code>catkin_make</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">包裹。</font></font></li>
+<li><code>source devel/setup.bash</code></li>
+<li><code>roslaunch lidartag LiDARTag_twotags.launch</code></li>
+<li><code>rosbag play -l -q bagfile.bag</code></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">要查看结果，</font></font><code>rosrun rviz rviz</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">您可以直接打开</font><em><font style="vertical-align: inherit;">LiDARTag/rviz/</font></em><font style="vertical-align: inherit;">文件夹下的</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag.rviz</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font><em><font style="vertical-align: inherit;"></font></em><font style="vertical-align: inherit;"></font></li>
+</ol>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">笔记</font></font></h6><a id="user-content-notes" class="anchor" aria-label="固定链接：注释" href="#notes"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此软件包提供了几个可直接运行的启动文件。请记住</font><font style="vertical-align: inherit;">根据你的目标大小、正在玩的包文件或你拥有的标记大小</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+更改启动文件中的</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">tag_size_list</font></font></strong><font style="vertical-align: inherit;"></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 。
+不同的启动文件：</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+-- LiDARTag_smallest.launch：仅最小的标签（0.61）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+-- LiDARTag_twotags.launch：两个较小的标签（0.61、0.8）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+-- LiDARTag_threetags.launch：所有标签（0.8、0.61、1.22）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+请注意，标记周围的间隙应大于</font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4"><img src="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，其中是</font><strong><font style="vertical-align: inherit;">最大</font></strong></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=t"><img src="https://render.githubusercontent.com/render/math?math=t" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">标记的尺寸</font><font style="vertical-align: inherit;">。因此，建议在室内环境中使用较小的标签。</font></font><strong><font style="vertical-align: inherit;"></font></strong><font style="vertical-align: inherit;"></font></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">建立你的标记</font></font></h2><a id="user-content-building-your-markers" class="anchor" aria-label="永久链接：构建您的标记" href="#building-your-markers"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/LiDARTagSideView.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/LiDARTagSideView.png" height="280" style="max-width: 100%;"></a> <a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/LiDARTagFrontView.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/LiDARTagFrontView.png" height="280" style="max-width: 100%;"></a> <a target="_blank" rel="noopener noreferrer" href="/UMich-BipedLab/LiDARTag/blob/release/figure/MarkerExample2.png"><img src="/UMich-BipedLab/LiDARTag/raw/release/figure/MarkerExample2.png" height="280" style="max-width: 100%;"></a><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+我们提供 AprilTag3 的 tag16h6c5，有三种尺寸（0.61、0.85、1.2）。</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+如果您想使用提供的标记，很简单：</font></font></p>
+<ol dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将基准标记附加到方形纸板或有机玻璃上，并将标记放置在黄色区域内。
+</font></font><ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">注意：尺寸</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">必须是</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0.61、0.805、1.22 米之一，否则您</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">必须</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">重新生成函数字典。如果是这样，请按照</font></font><a href="#building-your-own-customized-markers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此处</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">操作。</font></font></li>
+</ul>
+</li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">找到一个 3D 物体来</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">支撑</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">你的标记。它可以是一个盒子或一个画架。
+</font></font><ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">请注意，标记周围的间隙应大于</font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4"><img src="https://render.githubusercontent.com/render/math?math=t\sqrt{2}/4" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，其中是</font><strong><font style="vertical-align: inherit;">最大</font></strong></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=t"><img src="https://render.githubusercontent.com/render/math?math=t" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">标记的尺寸</font><font style="vertical-align: inherit;">。因此，建议在室内环境中使用较小的标签。</font></font><strong><font style="vertical-align: inherit;"></font></strong><font style="vertical-align: inherit;"></font></li>
+</ul>
+</li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">按照</font></font><a href="#running"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">以下步骤</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">运行该包。</font></font></li>
+</ol>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">构建您自己的定制标记</font></font></h2><a id="user-content-building-your-own-customized-markers" class="anchor" aria-label="永久链接：构建您自己的自定义标记" href="#building-your-own-customized-markers"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">如果您想使用自己的自定义标记（即不同类型的标记或不同大小的标记），请按照以下步骤操作：</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+I. 构建您的功能词典：</font></font></p>
+<ol dir="auto">
+<li><code>git clone https://github.com/UMich-BipedLab/matlab_utils</code></li>
+<li><font style="vertical-align: inherit;"></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将matlab_utils</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">添加</font><font style="vertical-align: inherit;">到</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">build_LiDARTag_library.m</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">中或将</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">matlab_utils</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">添加到您的 MATLAB 路径中。</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">根据您放置基准标记图像的位置，</font><font style="vertical-align: inherit;">编辑</font><em><font style="vertical-align: inherit;">build_LiDARTag_library.m</font></em><font style="vertical-align: inherit;">中的</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">opts.img_path 。</font></font></strong><font style="vertical-align: inherit;"></font><em><font style="vertical-align: inherit;"></font></em><font style="vertical-align: inherit;"></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">测量记号笔的尺寸 ( </font></font><a target="_blank" rel="noopener noreferrer nofollow" href="https://render.githubusercontent.com/render/math?math=t"><img src="https://render.githubusercontent.com/render/math?math=t" style="max-width: 100%;"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在</font><em><font style="vertical-align: inherit;">LiDARTag/matlab/function_dictionary/</font></em><font style="vertical-align: inherit;">中打开</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">build_LiDARTag_library.m</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。更改</font><font style="vertical-align: inherit;">为您的标记大小并运行</font><em><font style="vertical-align: inherit;">build_LiDARTag_library.m</font></em><font style="vertical-align: inherit;">以生成您的函数库。</font></font><em><font style="vertical-align: inherit;"></font></em><font style="vertical-align: inherit;"></font><code>opts.target_size_</code><font style="vertical-align: inherit;"></font><em><font style="vertical-align: inherit;"></font></em><font style="vertical-align: inherit;"></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将生成的函数字典放入</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/lib/</font></font></em></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将生成的函数字典放在</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/lib/</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">中时，请将不同的size放入不同的子文件夹（0, 1, 2, 3, ...），并按升序排列。例如，如果你有三个size（0.6, 0.8, 1.2），那么你将在</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">lib/</font></font></em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件夹中有三个子文件夹（0, 1, 2）。请按以下方式放置它们：
+</font></font><ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/lib/0/: 此处输入 0.6 大小</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/lib/1/: 此处输入 0.8 大小</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/lib/2/: 此处输入 1.2 大小</font></font></li>
+</ul>
+</li>
+</ol>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">II. 按照</font></font><a href="#building-your-markers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">建立标记</font></font></a></p>
+<div class="markdown-heading" dir="auto"><h6 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">笔记</font></font></h6><a id="user-content-note-2" class="anchor" aria-label="永久链接：注意" href="#note-2"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">所有用于测试 RKHS 的函数均发布在</font></font><em><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag/matlab/function_dictionary/</font></font></em></p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">启动文件的参数</font></font></h2><a id="user-content-parameters-of-launch-files" class="anchor" aria-label="永久链接：启动文件的参数" href="#parameters-of-launch-files"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">我们将参数拆分为两个不同的启动文件：</font></font><code>LiDARTag_outdoor.launch</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和
+</font></font><code>LiDARTag_master.launch.</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">前面包含针对不同环境（例如室内或室外）的最常用可调参数。 后者包含更多参数，您通常只需为系统更改一次，然后保留它们即可。</font></font></p>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag_outdoor.launch</font></font></h3><a id="user-content-lidartag_outdoorlaunch" class="anchor" aria-label="永久链接：LiDARTag_outdoor.launch" href="#lidartag_outdoorlaunch"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">特征聚类</font></font></h5><a id="user-content-feature-clustering" class="anchor" aria-label="永久链接：特征聚类" href="#feature-clustering"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">vicinity_factor</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于确定两点是否彼此靠近的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">linkage_tunable</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于计算链接标准的值</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">集群验证</font></font></h5><a id="user-content-cluster-validation" class="anchor" aria-label="永久链接：集群验证" href="#cluster-validation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">max_outlier_ratio</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+在平面拟合中检查异常值时用于验证聚类的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">tag_size_list</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+标签可能的大小列表</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag_master.launch</font></font></h3><a id="user-content-lidartag_masterlaunch" class="anchor" aria-label="永久链接：LiDARTag_master.launch" href="#lidartag_masterlaunch"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">系统模式</font></font></h4><a id="user-content-system-mode" class="anchor" aria-label="永久链接：系统模式" href="#system-mode"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">mark_cluster_validity</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否根据不同条件验证集群</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">plane_fitting</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否根据plane_fitting的结果来验证聚类</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">optimize_pose</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否通过降低成本函数来优化姿势</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">decrypt_id</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否解码ID</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">collect_data</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否发布检测到的 PC</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">num_threads</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于 TBB 的线程数</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">print_info</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否在 ros_info_stream 中记录状态</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">调试模式</font></font></h4><a id="user-content-debugging-mode" class="anchor" aria-label="永久链接：调试模式" href="#debugging-mode"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">debug_info</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否在ros_debug_stream中记录调试信息</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">debug_time</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否计算不同部分的时间</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">debug_decoding_time</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否记录解码 ID 的时间</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">log_data</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否将状态信息保存到txt文件中</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDAR 规格</font></font></h4><a id="user-content-lidar-specification" class="anchor" aria-label="永久链接：LiDAR 规格" href="#lidar-specification"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">has_ring</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+输入数据是否每个点都具有环信息</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">estimate_ring</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+是否估计每个点的环数</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">姿态优化求解器</font></font></h4><a id="user-content-solvers-for-pose-optimization" class="anchor" aria-label="永久链接：姿势优化求解器" href="#solvers-for-pose-optimization"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Optimization_solver（默认值：8）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+使用哪个优化求解器来优化姿势的成本函数。</font></font></p>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">以下是基于数值梯度的方法</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+1：opt_method = nlopt::LN_PRAXIS; </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+2：opt_method = nlopt::LN_NEWUOA_BOUND; </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+3：opt_method = nlopt::LN_SBPLX; //推荐</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+4：opt_method = nlopt::LN_BOBYQA; </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+5：opt_method = nlopt::LN_NELDERMEAD; </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+6：opt_method = nlopt::LN_COBYLA;</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">下面是基于梯度的解析方法</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+7：opt_method = nlopt::LD_SLSQP; // 建议 200Hz </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+8：opt_method = nlopt::LD_MMA; // 建议 120Hz </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+9：opt_method = nlopt::LD_TNEWTON_PRECOND_RESTART; // 失败 90% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+10：opt_method = nlopt::LD_TNEWTON_PRECOND; // 失败 90% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+11：opt_method = nlopt::LD_TNEWTON_RESTART; // 失败 80% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+12：opt_method = nlopt::LD_TNEWTON; // 失败 90% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+13：opt_method = nlopt::LD_LBFGS; // 失败 90% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+14：opt_method = nlopt::LD_VAR1; // 失败 90% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+15: opt_method = nlopt::LD_VAR2; // 失败 90%</font></font></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">euler_derivative</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+在优化中是否使用欧拉导数或李群导数</font></font></p>
+</li>
+<li>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">optimize_up_bound</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于优化中的约束的值</font></font></p>
+</li>
+<li>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">optimize_low_bound</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于优化中的约束值</font></font></p>
+</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解码方法</font></font></h4><a id="user-content-decode-method" class="anchor" aria-label="永久链接：解码方法" href="#decode-method"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">decrypt_method（默认值：2）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+使用哪种解码方法：</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+0：简单解码器</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+1：加权高斯</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+2：RKHS</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解码模式（默认值：5）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+使用哪种模式：0：单线程：原始双精度和</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+1：单线程：转换为矩阵</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+2：单线程：将矩阵转换为向量</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+3：c++ 线程（适用于线程的每个点，但不适用于线程的点块）</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+4：多线程：使用 TBB 的原始双精度和</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+5：多线程：使用 TBB 的矢量形式，无需调度</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+6：多线程：使用 TBB 的矢量形式，手动调度</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+7：多线程：使用 TBB 的矢量形式，TBB 调度</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+8：单线程：使用 KDTree</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h4 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">可调</font></font></h4><a id="user-content-tunable" class="anchor" aria-label="固定链接：可调" href="#tunable"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">特征聚类</font></font></h5><a id="user-content-feature-clustering-1" class="anchor" aria-label="永久链接：特征聚类" href="#feature-clustering-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">distance_bound</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于构建立方体并仅检测立方体内部标签的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">depth_bound</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于与深度梯度相比检测特征点的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">num_points_for_plane_feature</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于检测特征点的点数</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h5 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">集群验证</font></font></h5><a id="user-content-cluster-validation-1" class="anchor" aria-label="永久链接：集群验证" href="#cluster-validation-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">min_return_per_grid</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+每个网格中的最小点数（低于此数字，聚类将无效）</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">optimize_percentage</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于通过检查成本值来验证姿态估计结果的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">payload_intensity_threshold</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于通过强度梯度检测簇上边界点的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">points_threshold_factor</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">distance_to_plane_threshold</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于集群平面拟合的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">minimum_ring_boundary_points</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+簇中每个环上的最小边界点数</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">coa_tunable</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于通过检查覆盖区域来验证姿势估计结果的值</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">tagsize_tunable</font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+用于估计标签大小的值</font></font></li>
+</ul>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">引用</font></font></h2><a id="user-content-citations" class="anchor" aria-label="永久链接：引用" href="#citations"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">详细信息请参见：</font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LiDARTag：点云的实时基准标签，</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Jiunn-Kai Huang、Shoutian Wang、Maani Ghaffari 和 Jessy W. Grizzle。（</font></font><a href="/UMich-BipedLab/LiDARTag/blob/release/LiDARTag.pdf"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PDF</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）（</font></font><a href="https://arxiv.org/abs/1908.10349" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">arXiv</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）（</font></font><a href="https://ieeexplore.ieee.org/abstract/document/9392337" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此处</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">）</font></font></p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>@ARTICLE{HuangLiDARTag2020,
   author={Huang, Jiunn-Kai and Wang, Shoutian and Ghaffari, Maani and Grizzle, Jessy W.},
   journal={IEEE Robotics and Automation Letters}, 
   title={LiDARTag: A Real-Time Fiducial Tag System for Point Clouds},
@@ -353,6 +448,22 @@ The detail is described in: **LiDARTag: A Real-Time Fiducial Tag for Point Cloud
   number={3},
   pages={4875-4882},
   doi={10.1109/LRA.2021.3070302}}
-```
-
-
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="@ARTICLE{HuangLiDARTag2020,
+  author={Huang, Jiunn-Kai and Wang, Shoutian and Ghaffari, Maani and Grizzle, Jessy W.},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={LiDARTag: A Real-Time Fiducial Tag System for Point Clouds},
+  year={2021},
+  volume={6},
+  number={3},
+  pages={4875-4882},
+  doi={10.1109/LRA.2021.3070302}}" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+</article></div>
